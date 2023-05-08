@@ -20,7 +20,7 @@ class AdvertisementViewSet(ModelViewSet):
         """Получение прав для действий."""
         if self.action == 'create':
             return [IsAuthenticated()]
-        if self.action in ['update', 'partial_update', 'delete']:
+        if self.action in ['update', 'partial_update']:
             return [IsAuthenticated(), IsOwnerOrReadOnly()]
         return []
 
@@ -33,6 +33,6 @@ class FavoriteViewSet(ModelViewSet):
     filterset_class = FavoriteFilter
 
     def get_permissions(self):
-        if self.action in ['cretae','delete']:
+        if self.action in ['create']:
             return [IsAuthenticated(), IsNotOwner()]
         return []

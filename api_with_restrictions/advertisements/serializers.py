@@ -41,8 +41,8 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         """Метод для валидации. Вызывается при создании и обновлении."""
 
         creator = self.context['request'].user
-        if not self.instance:
-            if Advertisement.objects.filter(creator=creator).count() >10:
+        if not self.instance or data.get('status') == 'OPEN':
+            if Advertisement.objects.filter(creator=creator, status='OPEN').count() >10:
                 raise serializers.ValidationError(f'Превышено число открытых сообщений')
         return data
 
@@ -62,5 +62,4 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Метод для создания"""
         validated_data['person'] = self.context['request'].user
-        validated_data['advertisement'] = self.context['request']['advertisement']
         return super().create(validated_data)
